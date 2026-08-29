@@ -9,7 +9,7 @@ import unittest
 from uuid import uuid4
 
 from forge_agent.agent import AgentRunner
-from forge_agent.cli import run_repl
+from forge_agent.cli import build_parser, run_repl
 from forge_agent.config import AgentConfig
 from forge_agent.model import AssistantTurn
 from forge_agent.tools import ToolRegistry
@@ -57,6 +57,10 @@ class SessionCommandTests(unittest.TestCase):
         self.assertIn(f"Resumed {session_id}", text)
         self.assertIn(f"session={session_id}", text)
         self.assertIn("history=", text)
+
+    def test_auto_approve_flag_is_available(self) -> None:
+        args = build_parser().parse_args(["--yes"])
+        self.assertTrue(args.auto_approve)
 
 
 if __name__ == "__main__":

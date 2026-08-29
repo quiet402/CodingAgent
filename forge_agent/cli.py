@@ -68,6 +68,13 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Disable command allowlist; workspace file boundary still applies",
     )
+    parser.add_argument(
+        "--yes",
+        "--auto-approve",
+        dest="auto_approve",
+        action="store_true",
+        help="Auto-approve file mutations and commands for this run",
+    )
     parser.add_argument("--version", action="version", version=f"ForgeAgent {__version__}")
     return parser
 
@@ -79,6 +86,7 @@ REPL_HELP = """Session commands:
   /sessions   list saved sessions for this workspace
   /resume ID  resume by list number, unique ID prefix, or latest
   /new        start a new session; the current saved session is retained
+  Confirmation prompts accept 'a' to approve all later high-risk actions
   /quit       exit ForgeAgent
 """
 
@@ -228,7 +236,7 @@ def main(argv: list[str] | None = None) -> int:
         thinking=config.thinking,
         reasoning_effort=config.reasoning_effort,
     )
-    ui = ConsoleUI(confirm_actions=True)
+    ui = ConsoleUI(confirm_actions=not args.auto_approve, approve_all=args.auto_approve)
     ui.banner(
         config.provider,
         config.model,

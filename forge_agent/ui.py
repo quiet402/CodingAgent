@@ -39,11 +39,18 @@ class ConsoleUI:
         "reset": "\033[0m",
     }
 
-    def __init__(self, stream: Any = None, *, confirm_actions: bool = False) -> None:
+    def __init__(
+        self,
+        stream: Any = None,
+        *,
+        confirm_actions: bool = False,
+        approve_all: bool = False,
+    ) -> None:
         self.stream = stream or sys.stdout
         self.color = bool(getattr(self.stream, "isatty", lambda: False)())
         self._streaming = False
         self.confirm_actions = confirm_actions
+        self._approve_all = approve_all
 
     def _paint(self, text: str, color: str) -> str:
         if not self.color:
@@ -103,7 +110,7 @@ class ConsoleUI:
 
     def confirm_tool(self, spec: ToolSpec, arguments: dict[str, Any]) -> bool:
         """Ask for approval before a tool marked as high risk is executed."""
-        if not self.confirm_actions:
+        if not self.confirm_actions or self._approve_all:
             return True
         compact = json.dumps(
             _redact_confirmation(arguments), ensure_ascii=False, separators=(",", ":")
@@ -112,11 +119,15 @@ class ConsoleUI:
             compact = compact[:597] + "..."
         self.print(self._paint("  [confirmation required]", "yellow"))
         self.print(f"  {spec.name}: {compact}")
-        self.print("  Allow this action? [y/N]")
+        self.print("  Allow this action? [y/N/a=allow all]")
         try:
             answer = input().strip().casefold()
         except (EOFError, KeyboardInterrupt):
             answer = ""
+        if answer in {"a", "all"}:
+            self._approve_all = True
+            self.print("  [approved; future actions auto-approved]")
+            return True
         approved = answer in {"y", "yes"}
         self.print("  [approved]" if approved else "  [denied]")
         return approved

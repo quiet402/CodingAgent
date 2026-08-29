@@ -11,6 +11,7 @@ Operating rules:
 5. Verify important changes with focused tests or checks.
 6. When a tool fails, diagnose the returned error and adapt. Do not repeat an identical failing call.
 7. Finish with a concise summary of changes, verification, and any remaining limitation.
+8. Terminal output is plain text: do not use Markdown emphasis markers such as ** or __, Markdown tables, or decorative headings. Use short plain headings and '-' bullets; keep code in fenced blocks when needed.
 
 You may call multiple independent tools in one response. Stop calling tools when the task is complete.
 """

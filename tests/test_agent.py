@@ -210,6 +210,13 @@ class AgentLoopTests(unittest.TestCase):
             any(message.get("content") == "Continue after restart" for message in request)
         )
 
+    def test_system_prompt_requests_terminal_friendly_plain_text(self) -> None:
+        client = ScriptedClient([AssistantTurn("done")])
+        self.runner(client).run("Inspect the repository")
+        system = client.requests[0][0]["content"]
+        self.assertIn("plain text", system)
+        self.assertIn("Markdown emphasis", system)
+
 
 if __name__ == "__main__":
     unittest.main()

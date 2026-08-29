@@ -11,6 +11,7 @@ Repository: https://github.com/quiet402/CodingAgent
 - Existing files require an explicit overwrite flag; exact replacement is transactional.
 - Interactive CLI asks for confirmation before file mutations and command execution; denied actions return to the model as observations.
 - Enter `a` at a confirmation prompt, or pass `--yes`, to approve later high-risk actions for the current run.
+- The system prompt asks model responses to use terminal-friendly plain text without Markdown emphasis markers.
 - Safe mode runs commands without a shell and rejects shell operators, inline programs, path traversal, and unlisted executables.
 - History compaction preserves complete assistant/tool-call groups.
 - Interactive sessions retain context across user turns and stream model text as it arrives.

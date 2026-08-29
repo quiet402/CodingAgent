@@ -177,7 +177,11 @@ class AgentRunner:
                         "Loop guard blocked a third consecutive identical tool call. Change the approach."
                     )
                 else:
-                    result = self.tools.call(call.name, call.arguments)
+                    result = self.tools.call(
+                        call.name,
+                        call.arguments,
+                        confirm=self.ui.confirm_tool,
+                    )
                 if result.ok:
                     consecutive_errors = 0
                     if result.metadata.get("changed"):

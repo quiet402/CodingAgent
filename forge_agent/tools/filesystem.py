@@ -535,6 +535,7 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["path", "content"],
             },
             write_file,
+            requires_confirmation=True,
         ),
         ToolSpec(
             "replace_in_file",
@@ -550,6 +551,7 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["path", "old_text", "new_text"],
             },
             replace_in_file,
+            requires_confirmation=True,
         ),
         ToolSpec(
             "apply_edits",
@@ -563,6 +565,7 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["path", "edits"],
             },
             apply_edits,
+            requires_confirmation=True,
         ),
         ToolSpec(
             "make_directory",
@@ -573,6 +576,7 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["path"],
             },
             make_directory,
+            requires_confirmation=True,
         ),
         ToolSpec(
             "move_file",
@@ -586,6 +590,7 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["source", "destination"],
             },
             move_file,
+            requires_confirmation=True,
         ),
         ToolSpec(
             "copy_file",
@@ -599,6 +604,7 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["source", "destination"],
             },
             copy_file,
+            requires_confirmation=True,
         ),
         ToolSpec(
             "delete_file",
@@ -612,5 +618,6 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["path", "expected_sha256"],
             },
             delete_file,
+            requires_confirmation=True,
         ),
     ]

@@ -130,4 +130,5 @@ def build_command_tool(
             "required": ["command"],
         },
         run_command,
+        requires_confirmation=True,
     )

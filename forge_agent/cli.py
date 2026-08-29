@@ -228,7 +228,7 @@ def main(argv: list[str] | None = None) -> int:
         thinking=config.thinking,
         reasoning_effort=config.reasoning_effort,
     )
-    ui = ConsoleUI()
+    ui = ConsoleUI(confirm_actions=True)
     ui.banner(
         config.provider,
         config.model,

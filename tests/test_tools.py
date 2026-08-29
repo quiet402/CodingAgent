@@ -11,6 +11,8 @@ from uuid import uuid4
 from forge_agent.tools import (
     CommandPolicy,
     ToolRegistry,
+    ToolResult,
+    ToolSpec,
     Workspace,
     build_command_tool,
     build_filesystem_tools,
@@ -242,6 +244,62 @@ class CommandPolicyTests(unittest.TestCase):
         allowed, reason, _ = self.policy.check("git add .env.local", self.workspace)
         self.assertFalse(allowed)
         self.assertIn("path is blocked", reason)
+
+
+class ConfirmationTests(unittest.TestCase):
+    def test_denied_confirmation_does_not_execute_handler(self) -> None:
+        calls: list[dict] = []
+
+        def handler(arguments: dict) -> object:
+            calls.append(arguments)
+            return ToolResult.success("executed")
+
+        registry = ToolRegistry(
+            [
+                ToolSpec(
+                    "mutate",
+                    "mutating test tool",
+                    {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {"value": {"type": "string"}},
+                        "required": ["value"],
+                    },
+                    handler,
+                    requires_confirmation=True,
+                )
+            ]
+        )
+        denied = registry.call(
+            "mutate", '{"value":"x"}', confirm=lambda spec, args: False
+        )
+        self.assertFalse(denied.ok)
+        self.assertTrue(denied.metadata["confirmation_required"])
+        self.assertTrue(denied.metadata["denied"])
+        self.assertEqual(calls, [])
+
+    def test_approved_confirmation_executes_handler(self) -> None:
+        registry = ToolRegistry(
+            [
+                ToolSpec(
+                    "mutate",
+                    "mutating test tool",
+                    {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {"value": {"type": "string"}},
+                        "required": ["value"],
+                    },
+                    lambda arguments: ToolResult.success(arguments["value"]),
+                    requires_confirmation=True,
+                )
+            ]
+        )
+        approved = registry.call(
+            "mutate", '{"value":"x"}', confirm=lambda spec, args: True
+        )
+        self.assertTrue(approved.ok)
+        self.assertEqual(approved.message, "x")
 
 
 if __name__ == "__main__":

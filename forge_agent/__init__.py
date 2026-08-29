@@ -4,4 +4,4 @@ from .agent import AgentResult, AgentRunner
 from .config import AgentConfig
 
 __all__ = ["AgentConfig", "AgentResult", "AgentRunner"]
-__version__ = "0.6.0"
+__version__ = "0.7.0"

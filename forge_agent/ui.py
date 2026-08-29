@@ -3,10 +3,30 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from typing import Any
 
-from .tools import ToolResult
+from .tools import ToolResult, ToolSpec
+
+
+_SECRET_KEY = re.compile(r"(api.?key|authorization|password|secret|token)", re.I)
+_SECRET_VALUE = re.compile(r"\b(sk-[A-Za-z0-9_-]{8,}|Bearer\s+\S+)", re.I)
+
+
+def _redact_confirmation(value: Any, key: str = "") -> Any:
+    if _SECRET_KEY.search(key):
+        return "[REDACTED]"
+    if isinstance(value, dict):
+        return {item_key: _redact_confirmation(item, item_key) for item_key, item in value.items()}
+    if isinstance(value, list):
+        return [_redact_confirmation(item) for item in value]
+    if isinstance(value, str):
+        redacted = _SECRET_VALUE.sub("[REDACTED]", value)
+        if key == "content" and len(redacted) > 240:
+            return redacted[:237] + "..."
+        return redacted
+    return value
 
 
 class ConsoleUI:
@@ -19,10 +39,11 @@ class ConsoleUI:
         "reset": "\033[0m",
     }
 
-    def __init__(self, stream: Any = None) -> None:
+    def __init__(self, stream: Any = None, *, confirm_actions: bool = False) -> None:
         self.stream = stream or sys.stdout
         self.color = bool(getattr(self.stream, "isatty", lambda: False)())
         self._streaming = False
+        self.confirm_actions = confirm_actions
 
     def _paint(self, text: str, color: str) -> str:
         if not self.color:
@@ -71,12 +92,34 @@ class ConsoleUI:
 
     def tool_start(self, name: str, arguments: str) -> None:
         try:
-            compact = json.dumps(json.loads(arguments), ensure_ascii=False)
+            compact = json.dumps(
+                _redact_confirmation(json.loads(arguments)), ensure_ascii=False
+            )
         except json.JSONDecodeError:
-            compact = arguments
+            compact = _SECRET_VALUE.sub("[REDACTED]", arguments)
         if len(compact) > 240:
             compact = compact[:237] + "..."
         self.print(self._paint(f"  -> {name}", "yellow") + f" {compact}")
+
+    def confirm_tool(self, spec: ToolSpec, arguments: dict[str, Any]) -> bool:
+        """Ask for approval before a tool marked as high risk is executed."""
+        if not self.confirm_actions:
+            return True
+        compact = json.dumps(
+            _redact_confirmation(arguments), ensure_ascii=False, separators=(",", ":")
+        )
+        if len(compact) > 600:
+            compact = compact[:597] + "..."
+        self.print(self._paint("  [confirmation required]", "yellow"))
+        self.print(f"  {spec.name}: {compact}")
+        self.print("  Allow this action? [y/N]")
+        try:
+            answer = input().strip().casefold()
+        except (EOFError, KeyboardInterrupt):
+            answer = ""
+        approved = answer in {"y", "yes"}
+        self.print("  [approved]" if approved else "  [denied]")
+        return approved
 
     def tool_end(self, result: ToolResult) -> None:
         mark, color = ("[ok]", "green") if result.ok else ("[error]", "red")

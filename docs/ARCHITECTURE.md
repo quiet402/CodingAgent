@@ -19,7 +19,7 @@
 | `tools/git.py` | 仓库检查 | status/diff/log 三个只读工具；禁用外部 diff；路径和输出受限 |
 | `tools/command.py` | 命令执行 | 默认无 shell；允许列表；超时；标准输出和错误统一反馈 |
 | `audit.py` | 可观测性 | 追加式 JSONL；敏感字段和常见 key 形式脱敏 |
-| `ui.py` / `cli.py` | 交互入口 | token 流式展示；持续 REPL；多行粘贴；会话命令与运行摘要 |
+| `ui.py` / `cli.py` | 交互入口 | token 流式展示；持续 REPL；多行粘贴；高风险工具确认；会话命令与运行摘要 |
 
 ## 3. 核心循环
 
@@ -48,6 +48,8 @@ stop(max_steps)
 每个协议安全点还会把未压缩历史原子写入 `.forge/sessions/<session-id>.json`。恢复时重新构造 `ConversationHistory`，并继续向同 ID 的审计文件追加事件。快照包含消息和 DeepSeek `reasoning_content`，但不存储 API Key、Base URL 或其它配置凭据。`/new` 只切换到新会话，不删除旧快照。
 
 工具失败不会抛出到主循环，而会序列化成带 `ok=false` 的 tool 消息。模型因此能看到“参数缺失、路径越界、精确替换出现多处匹配、测试失败”等事实，并在下一轮修正策略。
+
+交互式 CLI 会在执行标记为高风险的工具前询问用户，包括文件创建/覆盖/编辑、目录创建、复制、移动、删除和命令执行。用户拒绝或输入结束信号时，工具不会运行，而是返回带 `confirmation_required` 的失败 observation；模型可以据此解释、缩小范围或等待新的指令。确认提示会隐藏常见密钥字段和 API key 形式。通过 Python API 构造 `ConsoleUI` 时默认关闭提示，便于脚本和单元测试注入自己的审批回调。
 
 ## 4. 上下文为什么按块裁剪
 

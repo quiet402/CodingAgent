@@ -9,6 +9,7 @@ from typing import Any, Callable
 
 JsonObject = dict[str, Any]
 ToolHandler = Callable[[JsonObject], "ToolResult"]
+ToolConfirmation = Callable[["ToolSpec", JsonObject], bool]
 
 
 @dataclass(slots=True)
@@ -38,6 +39,7 @@ class ToolSpec:
     description: str
     parameters: JsonObject
     handler: ToolHandler
+    requires_confirmation: bool = False
 
     def api_schema(self) -> JsonObject:
         return {
@@ -65,7 +67,13 @@ class ToolRegistry:
     def names(self) -> tuple[str, ...]:
         return tuple(self._specs)
 
-    def call(self, name: str, raw_arguments: str) -> ToolResult:
+    def call(
+        self,
+        name: str,
+        raw_arguments: str,
+        *,
+        confirm: ToolConfirmation | None = None,
+    ) -> ToolResult:
         spec = self._specs.get(name)
         if spec is None:
             return ToolResult.failure(
@@ -83,6 +91,20 @@ class ToolRegistry:
         validation_error = self._validate(spec.parameters, arguments)
         if validation_error:
             return ToolResult.failure(validation_error)
+        if spec.requires_confirmation and confirm is not None:
+            try:
+                approved = confirm(spec, arguments)
+            except Exception as exc:
+                return ToolResult.failure(
+                    f"Confirmation failed: {type(exc).__name__}: {exc}",
+                    confirmation_required=True,
+                )
+            if not approved:
+                return ToolResult.failure(
+                    f"User denied confirmation for tool '{name}'. Do not retry the same action without a new plan.",
+                    confirmation_required=True,
+                    denied=True,
+                )
         try:
             result = spec.handler(arguments)
         except Exception as exc:  # Tool faults become observations, not agent crashes.

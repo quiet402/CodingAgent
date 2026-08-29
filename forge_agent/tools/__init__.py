@@ -3,6 +3,7 @@
 from .command import CommandPolicy, build_command_tool
 from .core import ToolRegistry, ToolResult, ToolSpec
 from .filesystem import Workspace, build_filesystem_tools
+from .git import build_git_tools
 
 __all__ = [
     "CommandPolicy",
@@ -12,4 +13,5 @@ __all__ = [
     "Workspace",
     "build_command_tool",
     "build_filesystem_tools",
+    "build_git_tools",
 ]

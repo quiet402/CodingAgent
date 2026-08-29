@@ -152,6 +152,26 @@ class WorkspaceToolTests(unittest.TestCase):
         self.assertTrue(deleted.ok, deleted.message)
         self.assertFalse(destination.exists())
 
+    def test_glob_and_non_overwriting_copy(self) -> None:
+        (self.root / "src").mkdir()
+        (self.root / "src" / "one.py").write_text("one\n", encoding="utf-8")
+        (self.root / "src" / "two.txt").write_text("two\n", encoding="utf-8")
+        matched = self.call("glob_files", pattern="**/*.py")
+        self.assertTrue(matched.ok, matched.message)
+        self.assertEqual(matched.message, "src/one.py")
+
+        copied = self.call(
+            "copy_file", source="src/one.py", destination="backup/one.py"
+        )
+        self.assertTrue(copied.ok, copied.message)
+        self.assertEqual(
+            (self.root / "backup" / "one.py").read_text(encoding="utf-8"), "one\n"
+        )
+        refused = self.call(
+            "copy_file", source="src/one.py", destination="backup/one.py"
+        )
+        self.assertFalse(refused.ok)
+
     def test_sensitive_internal_paths_are_hidden_and_blocked(self) -> None:
         (self.root / ".env.local").write_text("SECRET=value", encoding="utf-8")
         (self.root / ".env.example").write_text("SECRET=placeholder", encoding="utf-8")

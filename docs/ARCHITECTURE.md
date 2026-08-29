@@ -15,7 +15,8 @@
 | `history.py` | 上下文管理 | 固定保留系统规则和原始任务；只按完整 assistant/tool 块裁剪 |
 | `sessions.py` | 会话持久化 | 原子 JSON 快照；工作区与版本校验；完整 ID/前缀/latest 恢复 |
 | `tools/core.py` | 工具协议 | JSON 参数解析、轻量 schema 校验、异常隔离、长结果头尾截断 |
-| `tools/filesystem.py` | 文件操作 | 11 个检查/读取/编辑工具；敏感路径拒绝；事务写入；哈希确认删除 |
+| `tools/filesystem.py` | 文件操作 | 13 个检查/读取/编辑工具；敏感路径拒绝；事务写入；哈希确认删除 |
+| `tools/git.py` | 仓库检查 | status/diff/log 三个只读工具；禁用外部 diff；路径和输出受限 |
 | `tools/command.py` | 命令执行 | 默认无 shell；允许列表；超时；标准输出和错误统一反馈 |
 | `audit.py` | 可观测性 | 追加式 JSONL；敏感字段和常见 key 形式脱敏 |
 | `ui.py` / `cli.py` | 交互入口 | token 流式展示；持续 REPL；多行粘贴；会话命令与运行摘要 |

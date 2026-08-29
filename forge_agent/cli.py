@@ -11,7 +11,14 @@ from .agent import AgentRunner
 from .config import AgentConfig
 from .model import OpenAICompatibleClient
 from .sessions import SessionError
-from .tools import CommandPolicy, ToolRegistry, Workspace, build_command_tool, build_filesystem_tools
+from .tools import (
+    CommandPolicy,
+    ToolRegistry,
+    Workspace,
+    build_command_tool,
+    build_filesystem_tools,
+    build_git_tools,
+)
 from .ui import ConsoleUI
 
 
@@ -204,6 +211,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     specs = build_filesystem_tools(workspace)
+    specs.extend(build_git_tools(workspace))
     specs.append(
         build_command_tool(
             workspace,

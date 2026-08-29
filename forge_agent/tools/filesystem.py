@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import tempfile
 from typing import Any, Iterable
 
@@ -236,6 +237,34 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
             skipped_binary_or_unreadable=skipped,
         )
 
+    def glob_files(args: dict[str, Any]) -> ToolResult:
+        start = workspace.resolve(args.get("path", "."), must_exist=True)
+        if not start.is_dir():
+            return ToolResult.failure("path must be a directory")
+        pattern = args["pattern"]
+        limit = args.get("limit", 200)
+        if not pattern:
+            return ToolResult.failure("pattern must not be empty")
+        if not 1 <= limit <= 500:
+            return ToolResult.failure("limit must be between 1 and 500")
+        matches: list[str] = []
+        truncated = False
+        for path in workspace.files(start):
+            relative_to_start = path.relative_to(start).as_posix()
+            if fnmatch.fnmatch(relative_to_start, pattern) or fnmatch.fnmatch(
+                path.name, pattern
+            ):
+                matches.append(workspace.display(path))
+                if len(matches) >= limit:
+                    truncated = True
+                    break
+        return ToolResult.success(
+            "\n".join(matches) if matches else "(no matches)",
+            count=len(matches),
+            truncated=truncated,
+            pattern=pattern,
+        )
+
     def write_file(args: dict[str, Any]) -> ToolResult:
         path = workspace.resolve(args["path"])
         existed = path.exists()
@@ -368,6 +397,27 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
             sha256=before,
         )
 
+    def copy_file(args: dict[str, Any]) -> ToolResult:
+        source = workspace.resolve(args["source"], must_exist=True)
+        destination = workspace.resolve(args["destination"])
+        if not source.is_file():
+            return ToolResult.failure("source must be a regular file")
+        if source == destination:
+            return ToolResult.failure("source and destination are the same file")
+        if destination.exists():
+            return ToolResult.failure("destination already exists; copy_file never overwrites")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+        display = workspace.display(destination)
+        return ToolResult.success(
+            f"Copied {workspace.display(source)} to {display}",
+            changed=True,
+            source=workspace.display(source),
+            path=display,
+            changed_paths=[display],
+            sha256=_sha256(destination),
+        )
+
     def delete_file(args: dict[str, Any]) -> ToolResult:
         path = workspace.resolve(args["path"], must_exist=True)
         if not path.is_file():
@@ -459,6 +509,20 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
             search_text,
         ),
         ToolSpec(
+            "glob_files",
+            "Find workspace files by a glob such as **/*.py, with a bounded result count.",
+            {
+                **object_schema,
+                "properties": {
+                    "pattern": {"type": "string"},
+                    "path": {"type": "string"},
+                    "limit": {"type": "integer"},
+                },
+                "required": ["pattern"],
+            },
+            glob_files,
+        ),
+        ToolSpec(
             "write_file",
             "Create a text file or atomically replace one. Existing files require overwrite=true.",
             {
@@ -522,6 +586,19 @@ def build_filesystem_tools(workspace: Workspace) -> list[ToolSpec]:
                 "required": ["source", "destination"],
             },
             move_file,
+        ),
+        ToolSpec(
+            "copy_file",
+            "Copy one workspace file while preserving metadata; existing destinations are refused.",
+            {
+                **object_schema,
+                "properties": {
+                    "source": {"type": "string"},
+                    "destination": {"type": "string"},
+                },
+                "required": ["source", "destination"],
+            },
+            copy_file,
         ),
         ToolSpec(
             "delete_file",

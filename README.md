@@ -7,7 +7,7 @@ Repository: https://github.com/quiet402/CodingAgent
 ## Why it is interesting
 
 - The model/tool/observation loop is explicit in `forge_agent/agent.py`.
-- Twelve local tools cover inspection, batch reads, search, transactional edits, moves, hash-confirmed deletion, and commands.
+- Seventeen local tools cover inspection, glob/search, batch reads, transactional edits, copy/move, hash-confirmed deletion, read-only Git inspection, and commands.
 - Existing files require an explicit overwrite flag; exact replacement is transactional.
 - Safe mode runs commands without a shell and rejects shell operators, inline programs, path traversal, and unlisted executables.
 - History compaction preserves complete assistant/tool-call groups.

@@ -244,6 +244,8 @@ def main(argv: list[str] | None = None) -> int:
         config.safe_mode,
         config.stream,
     )
+    if args.auto_approve:
+        ui.print("  approvals  AUTO for this run\n")
     runner = AgentRunner(client, registry, config, ui=ui)
     resumed = False
     if args.resume:

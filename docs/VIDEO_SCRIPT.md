@@ -4,7 +4,7 @@
 
 1. 复制 `examples/demo_project` 到仓库外的临时目录，避免改动演示素材原件。
 2. 终端字号调大，窗口只保留命令区和编辑器文件树。
-3. 设置 `FORGE_API_KEY`、`FORGE_BASE_URL`、`FORGE_MODEL`，确认画面不出现密钥。
+3. 设置 `DEEPSEEK_API_KEY`；本项目默认使用 DeepSeek，确认画面不出现密钥。
 4. 先运行 `python -m unittest demo_tests.py -v`，确认两个测试失败。
 
 推荐任务词：
@@ -17,7 +17,7 @@
 
 画面：仓库首页或文件树。
 
-讲稿：“这是我从零实现的 CodingAgent。它没有使用任何 agent 框架，核心是自己编写的模型调用、tool calling 循环、本地文件工具、上下文管理和终止策略。”
+讲稿：“这是我从零实现的 CodingAgent。它默认接入 DeepSeek，没有使用任何 agent 框架，核心是自己编写的模型调用、tool calling 循环、本地文件工具、上下文管理和终止策略。”
 
 ### 0:12-0:27 架构亮点
 
@@ -36,7 +36,7 @@
 画面：执行：
 
 ```powershell
-python D:\path\to\forge-agent\main.py -i -w D:\path\to\demo "阅读当前项目，修复库存计价函数：折扣应按百分比计算并保留两位小数，非法价格或折扣应抛出 ValueError。不要修改测试，完成后运行全部测试并总结改动。"
+python D:\path\to\CodingAgent\main.py -i -w D:\path\to\demo "阅读当前项目，修复库存计价函数：折扣应按百分比计算并保留两位小数，非法价格或折扣应抛出 ValueError。不要修改测试，完成后运行全部测试并总结改动。"
 ```
 
 讲稿：“终端会流式显示模型内容和每轮工具调用。它先列目录并读取实现和测试，再做精确修改，最后运行测试。路径被限制在 workspace；命令默认不用 shell，并受允许列表和超时控制。”

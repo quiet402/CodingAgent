@@ -39,8 +39,7 @@ pipx install git+https://github.com/quiet402/CodingAgent.git
 ```
 
 ```powershell
-$env:FORGE_API_KEY="your-key"
-$env:FORGE_MODEL="gpt-5.6"
+$env:DEEPSEEK_API_KEY="your-key"
 python main.py -w C:\path\to\project
 ```
 
@@ -83,11 +82,11 @@ Credentials are read only from environment variables. Do not commit them.
 
 ### DeepSeek
 
-DeepSeek is available as a built-in provider, so no base URL needs to be copied manually:
+DeepSeek is the default provider, so no provider or base URL needs to be copied manually:
 
 ```powershell
 $env:DEEPSEEK_API_KEY="your-key"
-forge --provider deepseek
+forge
 ```
 
 The preset uses `https://api.deepseek.com`, `deepseek-v4-pro`, thinking mode, and high reasoning effort. For lower latency, pass `--model deepseek-v4-flash`; to suppress thinking, pass `--thinking disabled`. CodingAgent preserves DeepSeek's `reasoning_content` between tool-call rounds as required by its API, without printing that private reasoning to the terminal. See [the DeepSeek guide](docs/DEEPSEEK.md).

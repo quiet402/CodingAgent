@@ -9,10 +9,10 @@ from forge_agent.config import AgentConfig
 
 
 class ConfigTests(unittest.TestCase):
-    def test_deepseek_profile_uses_current_defaults_and_dedicated_key(self) -> None:
+    def test_default_profile_uses_deepseek_and_dedicated_key(self) -> None:
         with patch.dict(
             os.environ,
-            {"FORGE_PROVIDER": "deepseek", "DEEPSEEK_API_KEY": "deepseek-secret"},
+            {"DEEPSEEK_API_KEY": "deepseek-secret"},
             clear=True,
         ):
             config = AgentConfig.from_env(Path.cwd())

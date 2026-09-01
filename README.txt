@@ -3,12 +3,12 @@ CodingAgent：从零实现的编程智能体
 Git仓库：https://github.com/quiet402/CodingAgent
 
 项目简介
-CodingAgent 不使用 LangChain、AutoGen 等 agent 框架。它直接调用 OpenAI 兼容的 Chat Completions/tool calling 接口，自行完成“模型决策—本地工具执行—结果回传—继续决策”的循环。项目仅依赖 Python 3.10+ 标准库。
+CodingAgent 不使用 LangChain、AutoGen 等 agent 框架。它直接调用 OpenAI 兼容接口，自行完成模型决策、本地工具执行、结果回传和循环。仅依赖 Python 3.10+ 标准库。
 
 运行方法
 1. 通过环境变量提供凭据，切勿写入仓库：
-   Windows PowerShell：$env:FORGE_API_KEY="你的密钥"
-2. DeepSeek：设置 DEEPSEEK_API_KEY 后运行 forge --provider deepseek；其它网关使用 FORGE_BASE_URL、FORGE_MODEL。
+   Windows PowerShell：$env:DEEPSEEK_API_KEY="你的密钥"
+2. 默认使用 DeepSeek，设置 DEEPSEEK_API_KEY 后运行 forge；其它网关使用 FORGE_PROVIDER、FORGE_BASE_URL、FORGE_MODEL。
 3. 安装：python -m pip install .；随后可在任意项目目录运行 forge。
 4. 源码交互：python main.py -w 目标项目目录；在 forge> 后反复输入任务。
 5. 单次运行：forge -w 目标项目目录 "修复问题并运行测试"

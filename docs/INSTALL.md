@@ -29,7 +29,7 @@ pipx install git+https://github.com/quiet402/CodingAgent.git
 
 ```powershell
 cd D:\path\to\some-project
-$env:FORGE_API_KEY="your-key"
+$env:DEEPSEEK_API_KEY="your-key"
 forge
 ```
 
@@ -55,11 +55,11 @@ $env:FORGE_MODEL="provider-model-name"
 
 `FORGE_BASE_URL` and `FORGE_MODEL` are optional when using the defaults. Never place a real key in a repository, README, command history, or video.
 
-For DeepSeek, use the dedicated preset and secret variable:
+DeepSeek is the default provider; use its dedicated secret variable:
 
 ```powershell
 $env:DEEPSEEK_API_KEY="your-key"
-forge --provider deepseek
+forge
 ```
 
 The current preset uses `deepseek-v4-pro`. Use `--model deepseek-v4-flash` when latency matters more than maximum capability. See [DEEPSEEK.md](DEEPSEEK.md) for thinking controls and environment-variable equivalents.

@@ -32,7 +32,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--provider",
         choices=["openai", "deepseek", "custom"],
-        help="API preset; otherwise FORGE_PROVIDER (default: openai)",
+        help="API preset; otherwise FORGE_PROVIDER (default: deepseek)",
     )
     parser.add_argument("--model", help="Model name; otherwise provider default or FORGE_MODEL")
     parser.add_argument("--base-url", help="OpenAI-compatible API base URL")

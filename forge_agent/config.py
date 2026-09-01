@@ -11,11 +11,11 @@ from pathlib import Path
 class AgentConfig:
     workspace: Path
     api_key: str
-    provider: str = "openai"
-    base_url: str = "https://api.openai.com/v1"
-    model: str = "gpt-5.6"
-    thinking: str | None = None
-    reasoning_effort: str | None = None
+    provider: str = "deepseek"
+    base_url: str = "https://api.deepseek.com"
+    model: str = "deepseek-v4-pro"
+    thinking: str | None = "enabled"
+    reasoning_effort: str | None = "high"
     max_steps: int = 24
     context_chars: int = 90_000
     tool_output_chars: int = 30_000
@@ -27,7 +27,7 @@ class AgentConfig:
     @classmethod
     def from_env(cls, workspace: str | Path = ".", **overrides: object) -> "AgentConfig":
         """Build configuration while keeping secrets out of files and arguments."""
-        provider = str(overrides.get("provider") or os.getenv("FORGE_PROVIDER", "openai")).casefold()
+        provider = str(overrides.get("provider") or os.getenv("FORGE_PROVIDER", "deepseek")).casefold()
         profiles = {
             "openai": ("https://api.openai.com/v1", "gpt-5.6", None, None),
             "deepseek": ("https://api.deepseek.com", "deepseek-v4-pro", "enabled", "high"),

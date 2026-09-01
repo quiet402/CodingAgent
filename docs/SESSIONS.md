@@ -1,6 +1,6 @@
 # 会话保存与恢复
 
-CodingAgent 0.8.1 会在每个工作区的 `.forge/sessions` 目录自动保存完整会话。关闭终端、退出 PyCharm或重启电脑后，都可以恢复并继续提问。
+CodingAgent 0.8.2 会在每个工作区的 `.forge/sessions` 目录自动保存完整会话。关闭终端、退出 PyCharm或重启电脑后，都可以恢复并继续提问。
 
 ## 交互命令
 

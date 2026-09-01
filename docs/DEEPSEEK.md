@@ -7,7 +7,7 @@ CodingAgent 原生支持 DeepSeek 的 OpenAI 兼容 Chat Completions 接口，�
 在 PowerShell 中设置当前窗口的环境变量，然后启动持续会话：
 
 ```powershell
-cd D:\NJU_TEST
+cd D:\your-project
 $env:DEEPSEEK_API_KEY="替换为你的 DeepSeek API Key"
 .\.venv\Scripts\forge.exe --provider deepseek
 ```

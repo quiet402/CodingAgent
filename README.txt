@@ -1,9 +1,9 @@
-ForgeAgent：从零实现的编程智能体
+CodingAgent：从零实现的编程智能体
 
 Git仓库：https://github.com/quiet402/CodingAgent
 
 项目简介
-ForgeAgent 不使用 LangChain、AutoGen 等 agent 框架。它直接调用 OpenAI 兼容的 Chat Completions/tool calling 接口，自行完成“模型决策—本地工具执行—结果回传—继续决策”的循环。项目仅依赖 Python 3.10+ 标准库。
+CodingAgent 不使用 LangChain、AutoGen 等 agent 框架。它直接调用 OpenAI 兼容的 Chat Completions/tool calling 接口，自行完成“模型决策—本地工具执行—结果回传—继续决策”的循环。项目仅依赖 Python 3.10+ 标准库。
 
 运行方法
 1. 通过环境变量提供凭据，切勿写入仓库：

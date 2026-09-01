@@ -68,7 +68,7 @@ class ConsoleUI:
         safe_mode: bool,
         stream: bool = True,
     ) -> None:
-        self.print(self._paint("[ForgeAgent]", "bold"))
+        self.print(self._paint("[CodingAgent]", "bold"))
         self.print(f"  provider   {provider}")
         self.print(f"  model      {model}")
         self.print(f"  workspace  {workspace}")

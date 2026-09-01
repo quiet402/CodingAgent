@@ -1,4 +1,4 @@
-"""Convenient source-tree entry point for ForgeAgent."""
+"""Convenient source-tree entry point for CodingAgent."""
 
 from forge_agent.cli import main
 

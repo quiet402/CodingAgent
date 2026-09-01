@@ -1,6 +1,6 @@
 # DeepSeek 接入指南
 
-ForgeAgent 原生支持 DeepSeek 的 OpenAI 兼容 Chat Completions 接口，包括流式文本、原生工具调用和思考上下文回传。API Key 只从进程环境读取，不会写入配置文件、源码或安装包。
+CodingAgent 原生支持 DeepSeek 的 OpenAI 兼容 Chat Completions 接口，包括流式文本、原生工具调用和思考上下文回传。API Key 只从进程环境读取，不会写入配置文件、源码或安装包。
 
 ## 最快启动
 
@@ -70,7 +70,7 @@ forge
 
 ## 为什么专门处理 reasoning_content
 
-DeepSeek 思考模式把推理内容作为 `reasoning_content` 返回，并要求使用工具时在后续请求中完整回传此前 assistant 的该字段。漏传会导致请求被拒绝。ForgeAgent 会：
+DeepSeek 思考模式把推理内容作为 `reasoning_content` 返回，并要求使用工具时在后续请求中完整回传此前 assistant 的该字段。漏传会导致请求被拒绝。CodingAgent 会：
 
 1. 在普通 JSON 和 SSE 流中分别解析该字段；
 2. 将分片完整拼接进 assistant 历史；

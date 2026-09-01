@@ -1,6 +1,6 @@
-# ForgeAgent
+# CodingAgent
 
-ForgeAgent is a compact coding agent implemented from first principles. It uses an OpenAI-compatible Chat Completions endpoint and native tool calling, but no agent framework, hosted code interpreter, or hosted file service.
+CodingAgent is a compact coding agent implemented from first principles. It uses an OpenAI-compatible Chat Completions endpoint and native tool calling, but no agent framework, hosted code interpreter, or hosted file service.
 
 Repository: https://github.com/quiet402/CodingAgent
 
@@ -27,12 +27,12 @@ Requires Python 3.10 or newer.
 For a Claude Code-like command available in every project, install with `pipx`:
 
 ```powershell
-pipx install D:\path\to\forge-agent
+pipx install D:\path\to\CodingAgent
 cd C:\path\to\your-project
 forge
 ```
 
-The same installation can use the public Git repository. `forge` and `forge-agent` are equivalent commands. See [INSTALL.md](docs/INSTALL.md) for installation, upgrades, uninstalling, and PATH troubleshooting.
+The same installation can use the public Git repository. `forge` and `forge-agent` are equivalent commands for the CodingAgent project. See [INSTALL.md](docs/INSTALL.md) for installation, upgrades, uninstalling, and PATH troubleshooting.
 
 ```powershell
 pipx install git+https://github.com/quiet402/CodingAgent.git
@@ -90,7 +90,7 @@ $env:DEEPSEEK_API_KEY="your-key"
 forge --provider deepseek
 ```
 
-The preset uses `https://api.deepseek.com`, `deepseek-v4-pro`, thinking mode, and high reasoning effort. For lower latency, pass `--model deepseek-v4-flash`; to suppress thinking, pass `--thinking disabled`. ForgeAgent preserves DeepSeek's `reasoning_content` between tool-call rounds as required by its API, without printing that private reasoning to the terminal. See [the DeepSeek guide](docs/DEEPSEEK.md).
+The preset uses `https://api.deepseek.com`, `deepseek-v4-pro`, thinking mode, and high reasoning effort. For lower latency, pass `--model deepseek-v4-flash`; to suppress thinking, pass `--thinking disabled`. CodingAgent preserves DeepSeek's `reasoning_content` between tool-call rounds as required by its API, without printing that private reasoning to the terminal. See [the DeepSeek guide](docs/DEEPSEEK.md).
 
 ## Test
 
@@ -118,7 +118,7 @@ See [the architecture note](docs/ARCHITECTURE.md) for design trade-offs, [the De
 
 ## Security boundary
 
-Safe mode substantially reduces accidental damage; it is not an operating-system sandbox. A permitted test program can still execute code from the target repository. Run ForgeAgent only on trusted projects and use a container or disposable account for stronger isolation. `--unsafe` is an explicit opt-out for controlled environments.
+Safe mode substantially reduces accidental damage; it is not an operating-system sandbox. A permitted test program can still execute code from the target repository. Run CodingAgent only on trusted projects and use a container or disposable account for stronger isolation. `--unsafe` is an explicit opt-out for controlled environments.
 
 ## License
 

@@ -1,1 +1,1 @@
-"""ForgeAgent test suite."""
+"""CodingAgent test suite."""

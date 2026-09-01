@@ -1,4 +1,4 @@
-"""Command-line interface for ForgeAgent."""
+"""Command-line interface for CodingAgent."""
 
 from __future__ import annotations
 
@@ -75,7 +75,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Auto-approve file mutations and commands for this run",
     )
-    parser.add_argument("--version", action="version", version=f"ForgeAgent {__version__}")
+    parser.add_argument("--version", action="version", version=f"CodingAgent {__version__}")
     return parser
 
 
@@ -87,7 +87,7 @@ REPL_HELP = """Session commands:
   /resume ID  resume by list number, unique ID prefix, or latest
   /new        start a new session; the current saved session is retained
   Confirmation prompts accept 'a' to approve all later high-risk actions
-  /quit       exit ForgeAgent
+  /quit       exit CodingAgent
 """
 
 

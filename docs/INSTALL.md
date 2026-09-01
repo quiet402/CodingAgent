@@ -1,6 +1,6 @@
 # Installation and deployment
 
-ForgeAgent is packaged as a standard Python command-line application. After one installation, open any project directory and run `forge`, similar to invoking `claude` or `codex`.
+CodingAgent is packaged as a standard Python command-line application. After one installation, open any project directory and run `forge`, similar to invoking `claude` or `codex`.
 
 ## Recommended: isolated global command with pipx
 
@@ -14,7 +14,7 @@ py -m pipx ensurepath
 Restart the terminal. From a local source checkout:
 
 ```powershell
-pipx install D:\path\to\forge-agent
+pipx install D:\path\to\CodingAgent
 ```
 
 After this project has a public Git repository:
@@ -23,7 +23,7 @@ After this project has a public Git repository:
 pipx install git+https://github.com/quiet402/CodingAgent.git
 ```
 
-`pipx` creates an isolated environment and publishes the `forge` and `forge-agent` commands on the user PATH. Project dependencies cannot pollute ForgeAgent, and ForgeAgent does not pollute the project.
+`pipx` creates an isolated environment and publishes the `forge` and `forge-agent` commands on the user PATH. Project dependencies cannot pollute CodingAgent, and CodingAgent does not pollute the project.
 
 ## Use it in any project
 

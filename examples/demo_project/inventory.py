@@ -1,4 +1,4 @@
-"""Intentionally incomplete code used in the two-minute ForgeAgent demo."""
+"""Intentionally incomplete code used in the two-minute CodingAgent demo."""
 
 
 def discounted_price(price: float, discount_percent: float) -> float:

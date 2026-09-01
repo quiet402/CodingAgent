@@ -1,4 +1,4 @@
-# ForgeAgent 设计说明
+# CodingAgent 设计说明
 
 ## 1. 目标与边界
 
@@ -53,7 +53,7 @@ stop(max_steps)
 
 ## 4. 上下文为什么按块裁剪
 
-原生 tool calling 协议要求 assistant 的 `tool_calls` 与随后相同 ID 的 tool 消息配对。简单地保留最后 N 条消息可能留下孤立 tool 消息，导致网关拒绝请求。ForgeAgent 把一次 assistant 响应及其全部 tool 结果视为不可分割的块：从最新块向前装入预算，旧块生成确定性摘要。系统规则和用户原始任务永远固定保留。
+原生 tool calling 协议要求 assistant 的 `tool_calls` 与随后相同 ID 的 tool 消息配对。简单地保留最后 N 条消息可能留下孤立 tool 消息，导致网关拒绝请求。CodingAgent 把一次 assistant 响应及其全部 tool 结果视为不可分割的块：从最新块向前装入预算，旧块生成确定性摘要。系统规则和用户原始任务永远固定保留。
 
 这里使用字符预算而非 tokenizer：它不绑定某家模型，也无额外依赖。代价是 token 估计不够精确，所以默认留有余量；生产版本可以注入特定模型的 tokenizer。
 
@@ -72,7 +72,7 @@ stop(max_steps)
 
 安全模式不启用 shell，而是先解析参数，再用 `subprocess.run(..., shell=False)` 执行。默认允许 Git、Python 测试、Node、Java、Go、Rust、.NET 等常见开发程序；拒绝管道、重定向、命令拼接、父目录跳转和 `python -c`/`node -e` 等内联代码。每个命令有 1-300 秒超时。
 
-当模型调用 `python`、`python3` 或 `py` 时，执行器会将其替换为启动 ForgeAgent 的 `sys.executable`，确保测试和脚本使用同一个虚拟环境，而不是意外落到系统 Python。
+当模型调用 `python`、`python3` 或 `py` 时，执行器会将其替换为启动 CodingAgent 的 `sys.executable`，确保测试和脚本使用同一个虚拟环境，而不是意外落到系统 Python。
 
 这是可解释的折中：白名单降低误操作面，却会拦截某些合法构建工具。受控环境可用 `--unsafe` 关闭命令策略，但文件工具仍受工作区边界保护。
 
@@ -86,7 +86,7 @@ API 层仅对可能恢复的 429、5xx、网络错误和超时重试；其他 4x
 
 客户端直接解析 Chat Completions 的 SSE `data:` 行。普通文本 delta 到达后立即交给 UI；tool call 的 ID、函数名和 JSON 参数可能分散在多个 chunk 中，因此按 `index` 分桶拼接，收到 `[DONE]` 后再构造完整调用。部分兼容网关不支持流式传输，可用 `--no-stream` 回退到普通 JSON 响应。
 
-DeepSeek 的思考模型还会把 `reasoning_content` 放在独立 delta 中。ForgeAgent 对其完整拼接，但不把内部推理流打印到终端；assistant 消息进入历史时保留该字段，并在工具结果后的下一次请求中原样回传。这样既保持界面只展示最终文本，也满足 DeepSeek 在携带 `tools` 时的连续会话协议。`provider` 预设只负责默认地址、模型、密钥变量和思考参数，核心 Agent 循环没有厂商分支。
+DeepSeek 的思考模型还会把 `reasoning_content` 放在独立 delta 中。CodingAgent 对其完整拼接，但不把内部推理流打印到终端；assistant 消息进入历史时保留该字段，并在工具结果后的下一次请求中原样回传。这样既保持界面只展示最终文本，也满足 DeepSeek 在携带 `tools` 时的连续会话协议。`provider` 预设只负责默认地址、模型、密钥变量和思考参数，核心 Agent 循环没有厂商分支。
 
 ## 9. 可测试性
 

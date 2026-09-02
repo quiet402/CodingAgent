@@ -113,7 +113,7 @@ conversation history ---> model client ---> assistant tool calls
                      workspace boundary + command policy
 ```
 
-See [the architecture note](docs/ARCHITECTURE.md) for design trade-offs, [the DeepSeek guide](docs/DEEPSEEK.md) for provider setup, [the video script](docs/VIDEO_SCRIPT.md) for a two-minute demonstration, and [the defense notes](docs/DEFENSE_QA.md) for likely interview questions.
+See [the architecture note](docs/ARCHITECTURE.md) for design trade-offs and [the DeepSeek guide](docs/DEEPSEEK.md) for provider setup.
 
 ## Security boundary
 

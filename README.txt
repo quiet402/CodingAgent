@@ -18,4 +18,4 @@ CodingAgent 不使用 LangChain、AutoGen 等 agent 框架。它直接调用 Ope
 特色功能
 内置批量读取、模式搜索、事务编辑、复制移动、哈希确认删除、只读 Git 检查和命令执行等十七个工具；路径限制在工作区，凭据及内部目录强制不可读。交互模式对文件修改、删除、移动、复制和命令执行请求确认，输入 a 可放行本次后续操作，也可用 --yes 启动时跳过确认，拒绝后反馈模型。支持流式输出、连续会话和重启恢复。安全模式禁止 shell 管道、内联脚本及未授权程序。Agent 具备 API 重试、错误回传、重复调用熔断、最大步数和人工中断。上下文超限时按完整 assistant/tool 块压缩。每次运行生成脱敏审计轨迹并汇总结果。
 
-部署说明见 docs/INSTALL.md；设计说明见 docs/ARCHITECTURE.md；演示脚本见 docs/VIDEO_SCRIPT.md；答辩准备见 docs/DEFENSE_QA.md。
+部署说明见 docs/INSTALL.md；设计说明见 docs/ARCHITECTURE.md。
